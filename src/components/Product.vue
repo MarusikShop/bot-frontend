@@ -1,20 +1,30 @@
 <template>
-    <article class="product">
-        <div class="product__cover"></div>
+    <article class="product" @click="goToPage">
+        <div class="product__cover" :style="{ 'background-image': `url(${data?.images?.[0]})` }"></div>
         <div class="product_info">
-            <div class="product_info__price">1 394 ₽</div>
-            <div class="product_info__name">
-                <RouterLink to="/product/123">Сумка мужская, RCJSK82953</RouterLink>
-            </div>
+            <div class="product_info__price">{{ data?.price }} ₽</div>
+            <div class="product_info__name">{{ data?.name }}</div>
         </div>
-        <div class="product__actions">
-            <RouterLink to="/basket"><Button>В корзину</Button></RouterLink>
+        <div class="product__actions" v-if="!data.modifications.length">
+            <ProductToBasket :data="data" />
         </div>
     </article>
 </template>
 
 <script setup>
-    import Button from './form/Button.vue';
+    import ProductToBasket from './ProductToBasket.vue';
+    import { useRouter } from 'vue-router';
+
+    const router = useRouter();
+
+    const props = defineProps({
+        data: Object
+    })
+
+    function goToPage() {
+        router.push({ path: `/product/${props.data?.id}` })
+    }
+    
 </script>
 
 <style lang="scss" scoped>
@@ -31,6 +41,7 @@
             flex-direction: column;
             gap: 5px;
             padding: 0px 20px;
+            height: 100%;
 
             &__price {
                 font-size: 18px;
@@ -39,6 +50,8 @@
         }
         &__actions {
             display: flex;
+            flex-direction: column;
+            gap: 5px;
             align-items: center;
             justify-content: center;
             width: 100%;

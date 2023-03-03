@@ -1,20 +1,20 @@
 <template>
     <article class="purchase">
-        <div class="purchase__cover"></div>
+        <div class="purchase__cover" :style="{ 'background-image': `url(${data?.cover})` }"></div>
         <div class="purchase_info">
-            <h2 class="purchase_info__title">Мужские сумки Redmond</h2>
-            <p class="purchase_info__description">
-                Супер красивые сумки. Очень удобные. Всем советую. Ваши мужчины будут в восторге
-            </p>
+            <h2 class="purchase_info__title">{{ data?.name }}</h2>
+            <p class="purchase_info__description"></p>
         </div>
         <div class="purchase__actions">
-            <RouterLink to="/purchase/1/catalog">Открыть закупку</RouterLink>
+            <RouterLink :to="{ path: `/purchase/${data?.id}/catalog` }">Открыть закупку</RouterLink>
         </div>
     </article>
 </template>
 
 <script setup>
-
+    defineProps({
+        data: Object
+    })
 </script>
 
 <style lang="scss" scoped>
@@ -32,6 +32,7 @@
             flex-direction: column;
             gap: 5px;
             padding: 0px 20px;
+            height: 100%;
 
             &__title {
                 font-size: 18px;

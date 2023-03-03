@@ -1,7 +1,7 @@
 <template>
     <div class="product-info">
         <div class="product-info_item product-info_item--center">
-            <div class="product-info__cover"></div>
+            <div class="product-info__cover" :style="{ 'background-image': `url(${data.images[0]})` }"></div>
             <div class="product-info_switch">
                 <div class="product-info_switch__item active"></div>
                 <div class="product-info_switch__item"></div>
@@ -9,23 +9,22 @@
             </div>
         </div>
         <div class="product-info_item">
-            <div class="product-info__price">1550 ₽</div>
-            <div class="product-info__name">Сумка мужская, redmond</div>
+            <div class="product-info__price">{{ data.price }} ₽</div>
+            <div class="product-info__name">{{ data.name }}</div>
         </div>
         <div class="product-info_item">
-            <div class="product-info_modifications">
+            <div class="product-info_modifications" v-if="data.modifications.length">
                 <div class="product-info_modifications__title">
-                    <p>Название характеристики: <span>Наименование выбранной</span></p>
+                    <p>{{ data?.modifications[0]?.name }}: <span>{{ data?.modifications[0]?.props?.[0].name }}</span></p>
                 </div>
                 <div class="product-info_modifications_body scroll">
-                    <div class="product-info_modifications_body__item">Зеленый</div>
-                    <div class="product-info_modifications_body__item active">Красный</div>
-                    <div class="product-info_modifications_body__item">Синий</div>
-                    <div class="product-info_modifications_body__item">Фиолетовый</div>
-                    <div class="product-info_modifications_body__item">Зеленый</div>
-                    <div class="product-info_modifications_body__item">Красный</div>
-                    <div class="product-info_modifications_body__item">Синий</div>
-                    <div class="product-info_modifications_body__item">Фиолетовый</div>
+                    <div class="product-info_modifications_body__item" 
+                        v-for="item in data?.modifications?.[0]?.props" 
+                        :key="item.id"
+                        @click="() => changeActive(item.id)" 
+                        :class="{ 'active': item.id == activeModification }">
+                            {{ item.name }}
+                        </div>
                 </div>
             </div>
             <div class="product-info_item_menu">
@@ -33,13 +32,30 @@
                 <div class="product-info_item_menu__item">Характеристики</div>
             </div>
             <div class="product-info__description">
-                <p>Современные технологии достигли такого уровня, что дальнейшее развитие различных форм деятельности говорит о возможностях экспериментов, поражающих по своей масштабности и грандиозности. Но представители современных социальных резервов, инициированные исключительно синтетически, обнародованы. С учётом сложившейся международной обстановки, постоянный количественный рост и сфера нашей активности, в своём классическом представлении, допускает внедрение вывода текущих активов.</p>
+                <p v-html="data?.description.replace(/\n/g, '<br />')"></p>
+            </div>
+        </div>
+        <div class="product-info_item">
+            <div class="product-info__actions">
+                <ProductToBasket :data="data" :modification="activeModification" />
             </div>
         </div>
     </div>
 </template>
 
 <script setup>
+    import { ref } from 'vue';
+    import ProductToBasket from './ProductToBasket.vue';
+
+    const props = defineProps({
+        data: Object
+    })
+
+    const activeModification = ref(props.data?.modifications?.[0]?.props?.[0].id);
+
+    function changeActive(id) {
+        activeModification.value = id;
+    }
 
 </script>
 
@@ -68,6 +84,13 @@
             font-weight: bold;
             font-size: 20px;
         }
+        &__actions {
+            width: 50%;
+            max-width: 200px;
+            margin: 0px auto;
+        }
+
+
         &_switch {
             display: flex;
             gap: 5px;
@@ -120,7 +143,6 @@
                 }
             }
         }
-
         &_item {
             width: 100%;
             height: auto;

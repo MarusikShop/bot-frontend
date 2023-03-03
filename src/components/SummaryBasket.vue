@@ -2,12 +2,34 @@
     <article class="summary">
         <div class="summary__row">
             <div class="summary__title">Ваша корзина</div>
-            <div class="summary__column">3 товара на сумму <b class="font-size--16">5 893 ₽</b></div>
+            <div class="summary__column">{{ countProducts }} товара на сумму <b class="font-size--16">{{ (amount).toFixed(0) }} ₽</b></div>
         </div>
     </article>
 </template>
 
 <script setup>
+    import { onMounted, ref, watch } from 'vue';
+
+    const props = defineProps({
+        products: Array
+    })
+
+    const countProducts = ref(0);
+    const amount = ref(0);
+
+    watch(props, (data) => {
+        countProducts.value = data.products.length;
+        for (let row of data.products) {
+            amount.value += row.count * row.price;
+        }
+    })
+
+    onMounted(() => {
+        countProducts.value = props.products.length;
+        for (let row of props.products) {
+            amount.value += row.count * row.price;
+        }
+    })
 
 </script>
 
