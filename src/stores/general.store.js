@@ -1,5 +1,5 @@
 import { defineStore } from 'pinia';
-import axios from 'axios';
+import { axiosBase } from '../modules/axios';
 
 export const useGeneralStore = defineStore('general', {
     state() {
@@ -18,7 +18,7 @@ export const useGeneralStore = defineStore('general', {
         async getPurchase() {
             try {
 
-                const res = await axios.get('http://localhost:3003/purchase');
+                const res = await axiosBase.get('/purchase');
                 const { data, status } = res;
 
                 if (status === 200) this.purchase = data.rows;
@@ -30,7 +30,7 @@ export const useGeneralStore = defineStore('general', {
         async getProducts(purchaseId) {
             try {
 
-                const res = await axios.get('http://localhost:3003/product/' + purchaseId);
+                const res = await axiosBase.get('/product/' + purchaseId);
                 const { data, status } = res;
 
                 if (status === 200) this.products = data.rows;
