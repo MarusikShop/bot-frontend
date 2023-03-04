@@ -1,7 +1,6 @@
 <template>
     <main>
         <ProductInfo :data="findProductById(route.params.id)" />
-        <RouterLink to="/basket">Перейти в корзину</RouterLink>
     </main>
 </template>
 

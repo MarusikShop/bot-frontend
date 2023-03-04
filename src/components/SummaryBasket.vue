@@ -18,6 +18,7 @@
     const amount = ref(0);
 
     watch(props, (data) => {
+        amount.value = 0;
         countProducts.value = data.products.length;
         for (let row of data.products) {
             amount.value += row.count * row.price;

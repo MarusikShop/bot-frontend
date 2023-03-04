@@ -1,28 +1,49 @@
 <template>
     <article class="product">
-        <div class="product_body">
-            <div class="product__cover" :style="{ backgroundImage: `url(${data.images[0]})` }"></div>
-            <div class="product_info">
-                <div class="product_info__price">{{ data.price * data.count }} ₽</div>
-                <div class="product_info__name">{{ data.name }}</div>
-                <div class="product_info__name" v-if="data.modId">{{ data.modification?.name }}: {{ data.modification?.value }}</div>
-                <div class="product_info__price-per-unit">{{ data.price }} ₽ / ед.</div>
+        <RouterLink :to="{ path: `/product/${data.id}` }">
+            <div class="product_body">
+                <div class="product__cover" :style="{ backgroundImage: `url(${data.images[0]})` }"></div>
+                <div class="product_info">
+                    <div class="product_info__price">{{ data.price * data.count }} ₽</div>
+                    <div class="product_info__name">{{ data.name }}</div>
+                    <div class="product_info__name" v-if="data.modId">{{ data.modification?.name }}: {{ data.modification?.value }}</div>
+                    <div class="product_info__price-per-unit">{{ data.price }} ₽ / ед.</div>
+                </div>
             </div>
-        </div>
+        </RouterLink>
         <div class="product_footer">
-            <div class="product_footer_delete">
+            <div class="product_footer_delete" @click="onRemoveProductFromBasket">
                 <span class="product_footer__icon"></span>
                 <span>Удалить</span>
             </div>
-            <span>{{ data.count }} шт.</span>
+            <div class="product_footer__counter">
+                <Counter :count="data.count" @increase="addToBasket" @decrase="removeToBasket" />
+            </div>
         </div>
     </article>
 </template>
 
 <script setup>
-    defineProps({
+    import Counter from './form/Counter.vue';
+    import { useGeneralStore } from '../stores/general.store';
+
+    const store = useGeneralStore();
+    const { updateBasket, removeProductFromBasket } = store;
+
+    const props = defineProps({
         data: Object
     });
+
+    function addToBasket() {
+        updateBasket({ action: '+', productId: props.data.id, modificationId: props.data.modId });
+    }
+    function removeToBasket() {
+        updateBasket({ action: '-', productId: props.data.id, modificationId: props.data.modId });
+    }
+    function onRemoveProductFromBasket() {
+        removeProductFromBasket(props.data.id);
+    }
+    
 </script>
 
 <style lang="scss" scoped>
@@ -52,6 +73,9 @@
                 display: flex;
                 align-items: center;
                 gap: 5px;
+            }
+            &__counter {
+                width: 80px;
             }
 
             &__icon {

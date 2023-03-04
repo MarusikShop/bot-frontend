@@ -10,15 +10,21 @@
     import SummaryBasket from '../components/SummaryBasket.vue';
 
     import { useGeneralStore } from '../stores/general.store';
-    import { onMounted, ref } from 'vue';
+    import { onMounted, ref, watch } from 'vue';
+import { storeToRefs } from 'pinia';
 
     const store = useGeneralStore();
+    const { basket } = storeToRefs(store);
     const { getBasket } = store;
 
     const products = ref([]);
 
-    onMounted(async () => {
-        products.value = await getBasket();
+    watch(basket.value, () => {
+        products.value = getBasket();
+    })
+
+    onMounted(() => {
+        products.value = getBasket();
     })
 
 </script>
