@@ -62,6 +62,7 @@ export const useGeneralStore = defineStore('general', {
             if (index >= 0) {
                 this.basket.splice(index, 1);
                 this.toggleMainButton('Перейти в корзину');
+                await this.fetchUpdateBasket();
             }
         },
         async fetchDataForBasket() {
