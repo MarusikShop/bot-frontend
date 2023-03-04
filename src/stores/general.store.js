@@ -171,6 +171,8 @@ export const useGeneralStore = defineStore('general', {
                 this.tg.MainButton.offClick(this.goToBasket);
                 this.tg.MainButton.offClick(this.createOrder);
 
+                this.tg.MainButton.setText('Нет текста');
+
                 this.tg.MainButton.hide();
             }
         },
