@@ -35,13 +35,13 @@
     });
 
     function addToBasket() {
-        updateBasket({ action: '+', productId: props.data.id, modificationId: props.data.modId });
+        updateBasket({ action: '+', productId: props.data.productId, modificationId: props.data.modificationId });
     }
     function removeToBasket() {
-        updateBasket({ action: '-', productId: props.data.id, modificationId: props.data.modId });
+        updateBasket({ action: '-', productId: props.data.productId, modificationId: props.data.modificationId });
     }
     function onRemoveProductFromBasket() {
-        removeProductFromBasket(props.data.id);
+        removeProductFromBasket(props.data.productId);
     }
     
 </script>
