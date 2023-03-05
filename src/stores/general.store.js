@@ -13,7 +13,7 @@ export const useGeneralStore = defineStore('general', {
         findProductById: (state) => (id) => {
             return state.products.find(item => item.id == id)
         },
-        isBasket: (state) => Boolean(state.basket.length)
+        isBasket: (state) => Boolean(state.basket.length > 0)
     },
     actions: {
         async getPurchase() {
@@ -49,7 +49,8 @@ export const useGeneralStore = defineStore('general', {
                 }
 
             } else {
-                this.basket.push({ productId, modificationId, count: 1 });
+                const basketRow = this.setBasketItem({ productId, modificationId, count: 1 });
+                this.basket.push(basketRow);
             }
 
             await this.fetchUpdateBasket();
@@ -75,6 +76,9 @@ export const useGeneralStore = defineStore('general', {
                 const { status, data } = res;
 
                 if (status === 200) {
+
+                    console.log(data);
+
                     this.basket = data.basket;
                     this.toggleMainButton('Перейти в корзину');
                 }
@@ -83,28 +87,20 @@ export const useGeneralStore = defineStore('general', {
                 console.error(e);
             }
         },
-        getBasket() {
+        setBasketItem({ productId, modificationId, count }) {
+            const product = this.findProductById(productId);
 
-            const basketData = this.basket.map(item => {
+            const modification = product?.modifications?.[0]?.props?.find(item => item.id == modificationId);
 
-                const { productId: id, modificationId: modId, count } = item
-
-                const product = this.findProductById(id);
-
-                const modification = product?.modifications?.[0]?.props?.find(item => item.id == modId);
-
-                return {
-                    id,
-                    modId,
-                    images: product.images,
-                    name: product.name,
-                    price: product.price,
-                    modification: { name: product?.modifications?.[0]?.name || null, value: modification?.name },
-                    count
-                }
-            })
-
-            return basketData;
+            return {
+                productId,
+                modificationId,
+                images: product.images,
+                name: product.name,
+                price: product.price,
+                modification: { name: product?.modifications?.[0]?.name || null, value: modification?.name },
+                count
+            }
         },
 
         // Телеграм функции
@@ -139,6 +135,9 @@ export const useGeneralStore = defineStore('general', {
             const isBasket = this.isBasket;
 
             if (!pathName) pathName = this.router.currentRoute._value.name;
+
+            console.log('BASKET: ', isBasket);
+            console.log(this.basket);
 
             if (isBasket) {
                 if (!isVisible) {

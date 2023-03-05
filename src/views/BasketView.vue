@@ -1,7 +1,7 @@
 <template>
     <main class="container-basket">
-        <ProductInBasket v-for="(item, index) in products" :key="'baseket_' + index" :data="item" />
-        <SummaryBasket :products="products" />
+        <ProductInBasket v-for="(item, index) in basket" :key="'basket_' + index" :data="item" />
+        <SummaryBasket :products="basket" />
     </main>
 </template>
 
@@ -10,22 +10,10 @@
     import SummaryBasket from '../components/SummaryBasket.vue';
 
     import { useGeneralStore } from '../stores/general.store';
-    import { onMounted, ref, watch } from 'vue';
-import { storeToRefs } from 'pinia';
+    import { storeToRefs } from 'pinia';
 
     const store = useGeneralStore();
     const { basket } = storeToRefs(store);
-    const { getBasket } = store;
-
-    const products = ref([]);
-
-    watch(basket.value, () => {
-        products.value = getBasket();
-    })
-
-    onMounted(() => {
-        products.value = getBasket();
-    })
 
 </script>
 
