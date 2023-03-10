@@ -6,7 +6,7 @@
                 <div class="product_info">
                     <div class="product_info__price">{{ data.price * data.count }} ₽</div>
                     <div class="product_info__name">{{ data.name }}</div>
-                    <div class="product_info__name" v-if="data.modId">{{ data.modification?.name }}: {{ data.modification?.value }}</div>
+                    <div class="product_info__name" v-if="data.modificationId">{{ data.modification?.name }}: {{ data.modification?.value }}</div>
                     <div class="product_info__price-per-unit">{{ data.price }} ₽ / ед.</div>
                 </div>
             </div>
@@ -33,6 +33,8 @@
     const props = defineProps({
         data: Object
     });
+
+    console.log(props.data);
 
     function addToBasket() {
         updateBasket({ action: '+', productId: props.data.productId, modificationId: props.data.modificationId });

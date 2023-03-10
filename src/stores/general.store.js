@@ -77,8 +77,6 @@ export const useGeneralStore = defineStore('general', {
 
                 if (status === 200) {
 
-                    console.log(data);
-
                     this.basket = data.basket;
                     this.toggleMainButton('Перейти в корзину');
                 }
@@ -217,7 +215,19 @@ export const useGeneralStore = defineStore('general', {
             }
         },
         async createOrder() {
-            console.log('Создаем заказ ...');
+
+            const query = {
+                userInfo: this.tg.initDataUnsafe,
+            }
+
+            const res = await axiosBase.post('/order', query);
+
+            if (res.status !== 200) {
+                return this.tg.showAlert('Ошибка создания заказа');
+            }
+
+            this.basket = [];
+
             this.tg.showAlert('Заказ оформлен. Спасибо', () => {
                 this.tg.close();
             })

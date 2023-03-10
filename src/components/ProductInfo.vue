@@ -39,6 +39,7 @@
             <div class="product-info__actions">
                 <ProductToBasket :data="data" :modification="activeModification" />
             </div>
+            <RouterLink to="/basket">Перейти в корзину</RouterLink>
         </div>
     </div>
 </template>
